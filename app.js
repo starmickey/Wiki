@@ -2,7 +2,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+const mongooseIterface = require(__dirname + '/mongoose.js')
 
 
 // ================ CONFIG EXPRESS APP ================
@@ -13,16 +13,6 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.set('view engine', 'ejs');
-
-
-// ============= SET MONGOOSE CONNECTION =============
-
-connectMongoose().catch(err => console.log(err));
-
-async function connectMongoose() {
-    mongoose.set('strictQuery', false);
-    await mongoose.connect('mongodb://127.0.0.1:27017/wikiDB');
-}
 
 
 
