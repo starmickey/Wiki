@@ -50,3 +50,15 @@ function getAllArticles() {
 }
 
 exports.getAllArticles = getAllArticles;
+
+
+function createArticle(articleDTO) {
+    const newArticle = new Article({
+        title: articleDTO.title,
+        content: articleDTO.content
+    });
+
+    return newArticle.save();
+}
+
+exports.createArticle = createArticle;
