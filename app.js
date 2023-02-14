@@ -72,6 +72,18 @@ app.route('/articles/:articleTitle')
                 res.send(reason);
             }
         )
+    })
+    
+    .put(function (req, res) {
+        const changesDTO = new ArticleDTO('', req.body.title, req.body.content);
+        mongooseInterface.putArticle(req.params.articleTitle,changesDTO).then(
+            function onfulfilled(article) {
+                res.send(article);
+            },
+            function onrejection(reason) {
+                res.send(reason);
+            }
+        )
     });
 
 

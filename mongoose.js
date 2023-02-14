@@ -117,5 +117,38 @@ exports.getArticleByTitle = function (articleTitle) {
             }
         })
     })
+}
+
+
+exports.putArticle = function (articleTitle, changesDTO) {
+
+    return new Promise((resolve, reject) => {
+
+        Article.findOneAndUpdate(
+            { title: articleTitle, rmDate: null },
+            { title: changesDTO.title, content: changesDTO.content },
+            { new: true },
+
+        ).then(
+            function onfulfilled(newArticle) {
+                if (newArticle === null) {
+                    reject('article not found')
+                } else {
+                    resolve(new ArticleDTO(newArticle.id, newArticle.title, newArticle.content));
+                }
+            },
+            function onrejected(reason) {
+                resolve(reason)
+            }
+        )
+
+    })
+
+
+    if (newArticle === null) {
+        return 'article not found'
+    } else {
+        return new ArticleDTO(newArticle.id, newArticle.title, newArticle.content);
+    }
 
 }
