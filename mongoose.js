@@ -119,36 +119,30 @@ exports.getArticleByTitle = function (articleTitle) {
     })
 }
 
-
 exports.putArticle = function (articleTitle, changesDTO) {
-
+    
     return new Promise((resolve, reject) => {
 
-        Article.findOneAndUpdate(
-            { title: articleTitle, rmDate: null },
-            { title: changesDTO.title, content: changesDTO.content },
-            { new: true },
+        Article.findOne({ title: articleTitle, rmDate: null }, function (error, article) {
+            if (error) {
+                reject(error);
 
-        ).then(
-            function onfulfilled(newArticle) {
-                if (newArticle === null) {
-                    reject('article not found')
-                } else {
-                    resolve(new ArticleDTO(newArticle.id, newArticle.title, newArticle.content));
-                }
-            },
-            function onrejected(reason) {
-                resolve(reason)
+            } else if (article === null) {
+                reject('article not found');
+
+            } else {
+                article.title = changesDTO.title === undefined? article.title : changesDTO.title;
+                article.content = changesDTO.content === undefined? article.content : changesDTO.content;
+
+                article.save().then(
+                    function onfulfilled(newArticle) {
+                        resolve(new ArticleDTO(newArticle.id, newArticle.title, newArticle.content));
+                    },
+                    function onrejected(reason) {
+                        reject(reason)
+                    }
+                )
             }
-        )
-
+        })
     })
-
-
-    if (newArticle === null) {
-        return 'article not found'
-    } else {
-        return new ArticleDTO(newArticle.id, newArticle.title, newArticle.content);
-    }
-
 }
