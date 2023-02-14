@@ -62,3 +62,37 @@ function createArticle(articleDTO) {
 }
 
 exports.createArticle = createArticle;
+
+
+
+function deleteAllArticles() {
+
+    const deletePromises = [];
+
+    return new Promise((resolve, reject) => {
+
+        Article.find({rmDate: null}, function (error, articles) {
+            if(error) {
+                reject(error);
+            } else {
+
+                articles.forEach(article => {
+                    article.rmDate = new Date();
+                    deletePromises.push(article.save());
+                });
+
+                Promise.all(deletePromises).then(
+                    function onfulfilled(values) {
+                        resolve('articles successfully deleted');
+                    },
+                    function onrejected(reason) {
+                        reject(reason);
+                    }
+                )
+            }
+        })    
+    })
+}
+
+exports.deleteAllArticles = deleteAllArticles;
+

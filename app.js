@@ -21,28 +21,43 @@ app.set('view engine', 'ejs');
 
 // ============= HTTPS REQUESTS HANDLERS =============
 
-app.get('/articles', function (req, res) {
+app.route('/articles')
 
-    mongooseInterface.getAllArticles().then(
-        function onFullfillment(articles) {
-            res.send(articles)
-        }, function (error) {
-            res.send(error);
-        }
-    )
-})
+    .get(function (req, res) {
+        mongooseInterface.getAllArticles().then(
+            function onFullfillment(articles) {
+                res.send(articles)
+            }, function (error) {
+                res.send(error);
+            }
+        )
+    })
 
-app.post('/articles', function (req, res) {
-    const articleDTO = new ArticleDTO('', req.body.title, req.body.content);
-    mongooseInterface.createArticle(articleDTO).then(
-        function onfulfilled(article) {
-            res.send('Article successfully created');
-        },
-        function onrejected(reason) {
-            res.send(reason);
-        }
-    );
-})
+    .post(function (req, res) {
+        const articleDTO = new ArticleDTO('', req.body.title, req.body.content);
+        mongooseInterface.createArticle(articleDTO).then(
+            function onfulfilled(article) {
+                res.send('Article successfully created');
+            },
+            function onrejected(reason) {
+                res.send(reason);
+            }
+        );
+    })
+    
+    .delete(function (req, res) {
+        mongooseInterface.deleteAllArticles().then(
+            function onfulfilled(successMessage) {
+                res.send(successMessage);
+            },
+            function onrejected(reason) {
+                res.send(reason);
+            }
+        )
+    });
+
+
+
 
 
 // ================= PORT LISTENER =================
