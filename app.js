@@ -21,6 +21,8 @@ app.set('view engine', 'ejs');
 
 // ============= HTTPS REQUESTS HANDLERS =============
 
+// -------- Requests targeting ALL the articles --------
+
 app.route('/articles')
 
     .get(function (req, res) {
@@ -44,7 +46,7 @@ app.route('/articles')
             }
         );
     })
-    
+
     .delete(function (req, res) {
         mongooseInterface.deleteAllArticles().then(
             function onfulfilled(successMessage) {
@@ -56,6 +58,21 @@ app.route('/articles')
         )
     });
 
+
+
+// ---------- Requests targeting a SPECIFIC article ----------
+
+app.route('/articles/:articleTitle')
+    .get(function (req, res) {
+        mongooseInterface.getArticleByTitle(req.params.articleTitle).then(
+            function onfulfilled(article) {
+                res.send(article);
+            },
+            function onrejection(reason) {
+                res.send(reason);
+            }
+        )
+    });
 
 
 

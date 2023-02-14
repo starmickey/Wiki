@@ -31,10 +31,13 @@ const Article = new mongoose.model('article', articleSchema);
 
 // ================ EXPORT FUNCTIONS ================
 
-function getAllArticles() {
+// ------- CRUD operations for ALL the articles -------
+
+exports.getAllArticles = function () {
+
     return new Promise((resolve, reject) => {
-        
-        Article.find({rmDate: null}, function(error, articles) {
+
+        Article.find({ rmDate: null }, function (error, articles) {
             if (error) {
                 reject(error);
             } else {
@@ -49,10 +52,9 @@ function getAllArticles() {
     })
 }
 
-exports.getAllArticles = getAllArticles;
 
 
-function createArticle(articleDTO) {
+exports.createArticle = function (articleDTO) {
     const newArticle = new Article({
         title: articleDTO.title,
         content: articleDTO.content
@@ -61,18 +63,17 @@ function createArticle(articleDTO) {
     return newArticle.save();
 }
 
-exports.createArticle = createArticle;
 
 
 
-function deleteAllArticles() {
+exports.deleteAllArticles = function () {
 
     const deletePromises = [];
 
     return new Promise((resolve, reject) => {
 
-        Article.find({rmDate: null}, function (error, articles) {
-            if(error) {
+        Article.find({ rmDate: null }, function (error, articles) {
+            if (error) {
                 reject(error);
             } else {
 
@@ -90,9 +91,31 @@ function deleteAllArticles() {
                     }
                 )
             }
-        })    
+        })
     })
 }
 
-exports.deleteAllArticles = deleteAllArticles;
 
+
+
+
+// ----- CRUD operations for a SPECIFIC article -----
+
+exports.getArticleByTitle = function (articleTitle) {
+
+    return new Promise((resolve, reject) => {
+
+        Article.findOne({ title: articleTitle, rmDate: null }, function (error, article) {
+            if (error) {
+                reject(error);
+
+            } else if (article === null) {
+                resolve(null);
+
+            } else {
+                resolve(new ArticleDTO(article.id, article.title, article.content));
+            }
+        })
+    })
+
+}
