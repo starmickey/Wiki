@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ArticleDTO } = require(__dirname + '/data-objects/ArticleDTO.js');
 
 
 // ============= SET MONGOOSE CONNECTION =============
@@ -26,3 +27,26 @@ const articleSchema = new mongoose.Schema({
 })
 
 const Article = new mongoose.model('article', articleSchema);
+
+
+// ================ EXPORT FUNCTIONS ================
+
+function getAllArticles() {
+    return new Promise((resolve, reject) => {
+        
+        Article.find({rmDate: null}, function(error, articles) {
+            if (error) {
+                reject(error);
+            } else {
+                const articleDTOs = [];
+                articles.forEach(article => {
+                    articleDTOs.push(new ArticleDTO(article.id, article.title, article.content));
+                });
+
+                resolve(articleDTOs);
+            }
+        })
+    })
+}
+
+exports.getAllArticles = getAllArticles;

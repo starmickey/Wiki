@@ -2,7 +2,8 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongooseIterface = require(__dirname + '/mongoose.js')
+const ejs = require('ejs');
+const mongooseInterface = require(__dirname + '/mongoose.js');
 
 
 // ================ CONFIG EXPRESS APP ================
@@ -10,7 +11,7 @@ const mongooseIterface = require(__dirname + '/mongoose.js')
 const app = express();
 
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
 
@@ -18,8 +19,15 @@ app.set('view engine', 'ejs');
 
 // ============= HTTPS REQUESTS HANDLERS =============
 
-app.get('/', function (req, res) {
-    res.render('index');
+app.get('/articles', function (req, res) {
+
+    mongooseInterface.getAllArticles().then(
+        function onFullfillment(articles) {
+            res.send(articles)
+        }, function (error) {
+            res.send(error);
+        }
+    )
 })
 
 
