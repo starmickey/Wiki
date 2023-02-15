@@ -96,6 +96,17 @@ app.route('/articles/:articleTitle')
                 res.send(reason);
             }
         )
+    })
+    
+    .delete(function (req, res) {
+        mongooseInterface.deleteArticle(req.params.articleTitle).then(
+            function onfulfilled(successMessage) {
+                res.send(successMessage);
+            },
+            function onrejection(reason) {
+                res.send(reason);
+            }
+        )
     });
     
 

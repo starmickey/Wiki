@@ -175,3 +175,32 @@ exports.patchArticle = function (articleTitle, changesDTO) {
 }
 
 
+
+exports.deleteArticle = function (articleTitle) {
+    
+    return new Promise((resolve, reject) => {
+
+        Article.findOne({ title: articleTitle, rmDate: null }, function (error, article) {
+            if (error) {
+                reject(error);
+
+            } else if (article === null) {
+                reject('article not found');
+
+            } else {
+                article.rmDate = new Date();
+
+                article.save().then(
+                    function onfulfilled(newArticle) {
+                        resolve('article deleted successfully');
+                    },
+                    function onrejected(reason) {
+                        reject(reason)
+                    }
+                )
+            }
+        })
+    })
+}
+
+
