@@ -84,6 +84,18 @@ app.route('/articles/:articleTitle')
                 res.send(reason);
             }
         )
+    })
+    
+    .patch(function (req, res) {
+        const changesDTO = new ArticleDTO('', req.body.title, req.body.content);
+        mongooseInterface.patchArticle(req.params.articleTitle,changesDTO).then(
+            function onfulfilled(article) {
+                res.send(article);
+            },
+            function onrejection(reason) {
+                res.send(reason);
+            }
+        )
     });
     
 

@@ -142,3 +142,36 @@ exports.putArticle = function (articleTitle, changesDTO) {
     })
 
 }
+
+
+
+
+exports.patchArticle = function (articleTitle, changesDTO) {
+
+    return new Promise((resolve, reject) => {
+
+        Article.findOne({ title: articleTitle, rmDate: null }, function (error, article) {
+            if (error) {
+                reject(error);
+
+            } else if (article === null) {
+                reject('article not found');
+
+            } else {
+                article.title = changesDTO.title === undefined ? article.title : changesDTO.title;
+                article.content = changesDTO.content === undefined ? article.content : changesDTO.content;
+
+                article.save().then(
+                    function onfulfilled(newArticle) {
+                        resolve(new ArticleDTO(newArticle.id, newArticle.title, newArticle.content));
+                    },
+                    function onrejected(reason) {
+                        reject(reason)
+                    }
+                )
+            }
+        })
+    })
+}
+
+
